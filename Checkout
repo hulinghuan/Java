@@ -1,5 +1,0 @@
-Class Checkout{
-    public static void main(String[] args){
-        System.out.println("Checkout successfully!");
-    }
-}
