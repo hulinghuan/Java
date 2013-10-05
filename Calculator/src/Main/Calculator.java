@@ -10,6 +10,7 @@ public class Calculator {
 		stk.push("111");
 		System.out.println(stk.pop());
 		System.out.println(stk.pop());
+
 	}
 
 }
