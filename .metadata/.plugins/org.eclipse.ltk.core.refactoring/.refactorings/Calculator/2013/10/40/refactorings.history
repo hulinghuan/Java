@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;Stack.java&apos; to &apos;Calculator/src/LogicalModule&apos;&#x0A;- Original project: &apos;Calculator&apos;&#x0A;- Destination element: &apos;Calculator/src/LogicalModule&apos;&#x0A;- Original element: &apos;Stack.java&apos;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="/src&lt;LogicalModule" element1="/src&lt;{Stack.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1380932252910" units="1" version="1.0"/>
+</session>

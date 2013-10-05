@@ -1,0 +1,12 @@
+package Main;
+
+import LogicalModule.Stack;
+
+public class Calculator {
+	private Stack stk = new Stack();
+	
+	public static void main(String args[]) {
+		stk.push("37");
+	}
+
+}

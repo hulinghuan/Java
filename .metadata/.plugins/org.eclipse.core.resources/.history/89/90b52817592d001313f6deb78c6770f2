@@ -1,0 +1,24 @@
+package LogicalModule;
+import java.util.ArrayList;
+
+
+public class Stack {
+	private ArrayList<String> _stack = new ArrayList<String>();
+	
+	/**
+	 * Pop the top element of the stack out.
+	 * @return return the element which is poped out. If there is no elements in stack, throw exception
+	 */
+	public String pop() {
+		String popResult;
+		popResult = _stack.get(_stack.size() - 1);
+		_stack.remove(_stack.size() - 1);
+		return popResult;
+	} 
+	public void push(String elements) {
+		_stack.add(elements);
+	}
+	public String get() {
+		return _stack.get(_stack.size() - 1);
+	}
+}
