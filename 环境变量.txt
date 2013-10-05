@@ -1,0 +1,10 @@
+用户变量
+JAVA_HOME
+C:\Program Files\Java\jdk1.6.0_10\bin
+PATH
+C:\Program Files\Java\jdk1.6.0_10\bin
+系统变量
+JAVA_HOME
+C:\Program Files\Java\jdk1.6.0_10\bin
+Path
+%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;C:\Program Files\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\Java\jdk1.6.0_10\bin;D:\masm5\;E:\Program Files\MySQL\MySQL Server 5.5\bin
