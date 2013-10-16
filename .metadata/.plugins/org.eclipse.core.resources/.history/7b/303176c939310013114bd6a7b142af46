@@ -1,0 +1,213 @@
+package Calculator;
+
+import java.util.ArrayList;
+
+import LogicalModule.Operator;
+import LogicalModule.Stack;
+
+public class Calculator {
+	private ArrayList<String> _infixArray = new ArrayList<String>();
+	private ArrayList<String> _reversePolishArray = new ArrayList<String>();
+	private Stack calculateStack;
+	
+	/**
+	 * 
+	 * @return Return the given math expression. If math expression is not given return 0;
+	 */
+	public double calculate() {
+		Stack calculateStack = new Stack();
+		int cStackLength = calculateStack.getStkSize();
+		String operator = "";
+		String firstNum = "";
+		String secondNum = "";
+		
+		for(int i = 0; i < cStackLength; i ++) {
+			calculateStack.push(_reversePolishArray.get(i));
+			if(isOperator(calculateStack.get()) == true) {
+				
+			}
+		}
+	}
+	/**
+	 * Convert the infix Stack to Reverse Polish Notation Stack
+	 */
+	public void infixToRPN() {
+		String pushBuffer = "";
+		Stack operatorStk = new Stack();
+		//String operatorBuffer = "";
+		int infixStkLength = _infixArray.size();
+		
+		for(int i = 0; i < infixStkLength; i++) {
+			pushBuffer = _infixArray.get(i);
+			if((!isOperator(pushBuffer) && !isParentheses(pushBuffer)) == true) {
+				_reversePolishArray.add(pushBuffer);
+				pushBuffer = "";
+			}
+			if(isOperator(pushBuffer) == true) {
+				if(operatorStk.getStkSize() == 0) {
+					operatorStk.push(pushBuffer);
+					pushBuffer = "";
+				}else {
+					Operator stkTop = new Operator(operatorStk.get());
+					Operator newOperator = new Operator(pushBuffer);
+					if(newOperator.get_operatorPrecedence() > stkTop.get_operatorPrecedence()) {
+						operatorStk.push(pushBuffer);
+						pushBuffer = "";
+					}else {
+						_reversePolishArray.add(operatorStk.pop());
+						operatorStk.push(pushBuffer);
+						pushBuffer = "";
+					}
+				}
+			}
+			if(isParentheses(pushBuffer) == true) {
+				if(pushBuffer.equals("(")) {
+					operatorStk.push(pushBuffer);
+					pushBuffer = "";
+				}
+				if(pushBuffer.equals(")")) {
+					while(operatorStk.getStkSize() != 0) {
+						pushBuffer = operatorStk.pop();
+						if(!pushBuffer.equals("(")) {
+							_reversePolishArray.add(pushBuffer);
+						} else {
+							pushBuffer = "";
+							break;
+						}
+					pushBuffer = "";
+					}
+				}
+			}
+		}
+		if(operatorStk.getStkSize() != 0) {
+			int operatorStkSize = operatorStk.getStkSize();
+			for(int i = 0; i < operatorStkSize; i++) {
+				_reversePolishArray.add(operatorStk.pop());
+			}
+		}
+	}
+	/**
+	 * Print the _reversePolishArray. For testing only.
+	 */
+	public void printRPA() {
+		System.out.println("This is the _reversePolishArray:");
+		for(int i = 0; i < _reversePolishArray.size() ; i++) {
+			System.out.println(_reversePolishArray.get(i));
+		}
+	}
+	/**
+	 * Initial the Infix Stack by giving the ifix expression.
+	 * @param infixExp The math infix expression.
+	 */
+	public void initialInfixStk(String infixExp) {		
+		char[] charInfixExp = infixExp.toCharArray();
+		String pushNumberBuffer = "";
+		String pushOperationBuffer = "";
+		
+		for(int i = 0; i < infixExp.length(); i++) {
+			if(isSpace(charInfixExp[i]) == true) {
+				continue;
+			}
+			if(charInfixExp[i] == '+' || 
+				charInfixExp[i] == '-' ||
+				charInfixExp[i] == '*' ||
+				charInfixExp[i] == '/' ||
+				charInfixExp[i] == '(' ||
+				charInfixExp[i] == ')'
+										) {
+				if(pushNumberBuffer == "") {
+					pushOperationBuffer = pushOperationBuffer + charInfixExp[i];
+					_infixArray.add(pushOperationBuffer);
+					pushOperationBuffer = "";
+				}
+				else {
+					pushOperationBuffer = pushOperationBuffer + charInfixExp[i];
+					_infixArray.add(pushNumberBuffer);
+					_infixArray.add(pushOperationBuffer);
+					pushOperationBuffer = "";
+					pushNumberBuffer = "";
+				}
+			} 
+			else {
+				pushNumberBuffer = pushNumberBuffer + charInfixExp[i];
+			}
+		}
+		if(pushNumberBuffer != "") {
+			_infixArray.add(pushNumberBuffer);
+		}
+		
+	}
+	/**
+	 * Pop and print all elements of _infixStk. For testing only.  
+	 */
+	public void printInfixArray() {
+		int stkLength = _infixArray.size();
+		System.out.println("This is the _infixArray");
+		for(int i = 0; i < stkLength; i++) {
+			System.out.println(_infixArray.get(i));
+		}
+	}
+	/**
+	 * Determine if the input is space.
+	 * @param input the input char.
+	 * @return Return true if the input is space. Return false if the input is not space.
+	 */
+	private boolean isSpace(char input) {
+		if(input == ' ') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	/**
+	 * Determine if the input is parentheses
+	 * @param input The input char.
+	 * @return Return true if the input is a operator. Return false if the input is not operator.
+	 */
+	private boolean isParentheses(String input) {
+		if(input.equals("(") || input.equals(")")) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	/**
+	 * Determine if the input is Operator + - * /
+	 * @param input The input char.
+	 * @return Return true if the input is a operator. Return false if the input is not operator.
+	 */
+	private boolean isOperator(String input) {
+		if(input.equals("+") ||
+			input.equals("-") ||
+			input.equals("*") ||
+			input.equals("/")
+						) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	public ArrayList<String> get_infixArray() {
+		return _infixArray;
+	}
+	public void set_infixStk(ArrayList<String> _infixArray) {
+		this._infixArray = _infixArray;
+	}
+	public ArrayList<String> get_reversePolishArray() {
+		return _reversePolishArray;
+	}
+	public void set_reversePolishArray(ArrayList<String> _reversePolishArray) {
+		this._reversePolishArray = _reversePolishArray;
+	}
+	public Stack getCalculateStack() {
+		return getCalculateStack();
+	}
+	public void setCalculateStack(Stack calculateStack) {
+		this.calculateStack = calculateStack;
+	}
+	public void set_infixArray(ArrayList<String> _infixArray) {
+		this._infixArray = _infixArray;
+	}
+	
+
+}

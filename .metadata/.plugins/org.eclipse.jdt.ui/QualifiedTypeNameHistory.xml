@@ -2,4 +2,12 @@
 <qualifiedTypeNameHistroy>
 <fullyQualifiedTypeName name="LogicalModule.Stack"/>
 <fullyQualifiedTypeName name="java.util.EmptyStackException"/>
+<fullyQualifiedTypeName name="Calculator.Calculator"/>
+<fullyQualifiedTypeName name="java.util.Scanner"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="LogicalModule.Operator"/>
+<fullyQualifiedTypeName name="Module.Say"/>
+<fullyQualifiedTypeName name="Module.SayFactory"/>
+<fullyQualifiedTypeName name="Module.sayFactory"/>
+<fullyQualifiedTypeName name="Module.MContrl"/>
 </qualifiedTypeNameHistroy>

@@ -1,0 +1,12 @@
+package Module;
+
+public class SayImpl2 implements SaySomething {
+
+	@Override
+	public void sayHelloWorld() {
+		// TODO Auto-generated method stub
+		System.out.println("SayImpl2 : HelloWorld!");
+	}
+	
+
+}

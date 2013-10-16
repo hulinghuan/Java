@@ -1,0 +1,4 @@
+
+public class SayImpl1 implements SaySomething {
+	
+}

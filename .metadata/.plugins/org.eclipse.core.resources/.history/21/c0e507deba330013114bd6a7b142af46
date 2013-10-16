@@ -1,0 +1,10 @@
+package Main;
+
+import Module.Say;
+
+public class Main {
+	public static void main() {
+		Say say = new Say();
+		say.ss.sayHelloWorld();
+	}
+}

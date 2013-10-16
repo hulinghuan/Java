@@ -1,0 +1,25 @@
+package Main;
+
+import java.util.Scanner;
+
+import Calculator.Calculator;
+
+public class Main {
+	public static void main(String[] args) {
+	Calculator clt = new Calculator();
+	String inputString = "";
+	Scanner scn = new Scanner(System.in);
+	System.out.println("Please input the math expression");
+	inputString = scn.nextLine();
+	clt.initialInfixStk(inputString);
+	clt.infixToRPN();
+	clt.printInfixArray();
+	clt.printRPA();
+	try {
+		System.out.println(clt.calculate());
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	}
+}

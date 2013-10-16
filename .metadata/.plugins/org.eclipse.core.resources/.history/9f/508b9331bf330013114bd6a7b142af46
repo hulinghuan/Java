@@ -1,0 +1,10 @@
+package Main;
+
+import Module.SayFactory;
+
+public class Main {
+	public static void main(String args[]) {
+		SayFactory s = new SayFactory();
+		s.getSay().sayHello();
+	}
+}

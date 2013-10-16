@@ -1,0 +1,5 @@
+package Module;
+
+public class Say {
+	public SaySomething ss = new SayImpl1();
+}

@@ -1,0 +1,6 @@
+
+public class Say {
+	public Say() {
+		SaySomething ss = new SayImpl1();
+	}
+}

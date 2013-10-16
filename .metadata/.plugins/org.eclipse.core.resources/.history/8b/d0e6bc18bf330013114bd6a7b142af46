@@ -1,0 +1,7 @@
+package Module;
+
+public class sayFactory {
+	public static sayHello() {
+		new say1().sayHello();
+	}
+}

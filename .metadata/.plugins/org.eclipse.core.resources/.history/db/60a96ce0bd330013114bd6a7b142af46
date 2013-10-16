@@ -1,0 +1,9 @@
+package Module;
+
+public class SayFactory {
+	private say say;
+	
+	public say getSay() {
+		return new say;
+	}
+}

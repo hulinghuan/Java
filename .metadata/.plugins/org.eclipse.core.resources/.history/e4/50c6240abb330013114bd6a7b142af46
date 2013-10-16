@@ -1,0 +1,6 @@
+package Module;
+
+public interface SaySomething {
+	public void sayHelloWorld();
+
+}

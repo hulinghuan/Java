@@ -1,0 +1,8 @@
+package Module;
+
+public class MContrl {
+	public static void output() {
+		output op = new ZKGPSoutput();
+		op.outputName();
+	}
+}
