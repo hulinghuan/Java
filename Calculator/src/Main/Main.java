@@ -18,7 +18,7 @@ public class Main {
 		e2.printStackTrace();
 	}*/
 	try {
-		clt.initialInfixArray2(inputString);
+		clt.initialInfixArray(inputString);
 	} catch (Exception e2) {
 		// TODO Auto-generated catch block
 		e2.printStackTrace();

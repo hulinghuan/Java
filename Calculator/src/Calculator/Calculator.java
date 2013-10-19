@@ -105,7 +105,8 @@ public class Calculator {
 					pushBuffer = "";
 				}
 				if(pushBuffer.equals(")")) {
-					while(operatorStk.getStkSize() != 0) {
+					//while(operatorStk.getStkSize() != 0) {
+					while(true) {
 						pushBuffer = operatorStk.pop();
 						if(!pushBuffer.equals("(")) {
 							_reversePolishArray.add(pushBuffer);
@@ -150,110 +151,14 @@ public class Calculator {
 	 * @param infixExp The math infix expression.
 	 * @throws Exception 
 	 */
-	public void initialInfixArray(String infixExp) throws Exception {		
-		char[] charInfixExp = infixExp.toCharArray();
-		String pushNumberBuffer = "";
-		//String pushOperationBuffer = "";
-		ArrayList<String> pushOperationBuffer = new ArrayList<String>();
-		int needPushOperator = 0;
-		
-		for(int i = 0; i < infixExp.length(); i++) {
-			if(isSpace(charInfixExp[i]) == true) {
-				continue;
-			}
-			if(isOperator("" + charInfixExp[i]) ||
-				charInfixExp[i] == '(' ||
-				charInfixExp[i] == ')'
-										) {
-				if(pushNumberBuffer == "") {
-					if(needPushOperator == 1) {
-						_infixArray.add("" + charInfixExp[i]);
-						needPushOperator = 0;
-						continue;
-					}
-					if(charInfixExp[i] == '(') {
-						_infixArray.add("" + charInfixExp[i]);
-						continue;
-					}
-					if(charInfixExp[i] == ')') {
-						throw new Exception();
-					}
-					//pushOperationBuffer = pushOperationBuffer + charInfixExp[i];
-					pushOperationBuffer.add("" + charInfixExp[i]);
-					//pushOperationBuffer = "";
-				}
-				else {
-					if(pushOperationBuffer.size() == 1) {
-						if(pushOperationBuffer.equals("-")) {
-							pushOperationBuffer.clear();
-							pushOperationBuffer.add("" + charInfixExp[i]);
-							_infixArray.add("-" + pushNumberBuffer);
-							_infixArray.add(pushOperationBuffer.get(0));
-							pushOperationBuffer.clear();
-							pushNumberBuffer = "";
-							continue;
-						}
-						if(pushOperationBuffer.equals("+")) {
-							pushOperationBuffer.clear();
-							pushOperationBuffer.add("" + charInfixExp[i]);
-							_infixArray.add(pushNumberBuffer);
-							_infixArray.add(pushOperationBuffer.get(0));
-							pushOperationBuffer.clear();
-							pushNumberBuffer = "";
-							continue;
-						}
-					}
-					if(pushOperationBuffer.size() > 1) {
-						throw new Exception();
-					}
-					if(pushOperationBuffer.size() == 0) {
-						if(charInfixExp[i] == ')') {
-							needPushOperator = 1;
-							if(pushNumberBuffer != "") {
-								_infixArray.add(pushNumberBuffer);
-							}
-							pushNumberBuffer = "";
-							_infixArray.add(")");
-							continue;
-						}
-						pushOperationBuffer.add("" + charInfixExp[i]);
-						_infixArray.add(pushNumberBuffer);
-						_infixArray.add(pushOperationBuffer.get(0));
-						pushOperationBuffer.clear();
-						pushNumberBuffer = "";
-					}
-				}
-			} 
-			else {
-				pushNumberBuffer = pushNumberBuffer + charInfixExp[i];
-			}
-		}
-		if(pushNumberBuffer != "") {
-			if(pushOperationBuffer.size() == 0) {
-				_infixArray.add(pushNumberBuffer);
-				return;
-			} else{
-				if(pushOperationBuffer.get(0).equals("+")) {
-					_infixArray.add(pushNumberBuffer);
-					return;
-				}
-				if(pushOperationBuffer.get(0).equals("-")) {
-					_infixArray.add("-" + pushNumberBuffer);
-					return;
-				}
-				throw new Exception();	
-			}
-		}
-		
-	}
-	/**
-	 * Pop and print all elements of _infixStk. For testing only.  
-	 */
-	public void initialInfixArray2(String infixExp) throws Exception {
+	public void initialInfixArray(String infixExp) throws Exception {
 		char[] charInfixExp = infixExp.toCharArray();
 		String NumBuffer = "";
 		String PNBuffer = "";
 		int needPush = 0;
+		int fPCount = 0;
+		int sPCount = 0;
+		int numCount = 0;
 		
 		for(int i = 0; i < charInfixExp.length; i++) {
 			if(isSpace(charInfixExp[i]) == true) {
@@ -295,40 +200,51 @@ public class Calculator {
 						}
 					}
 				}
-			if(isParentheses("" + charInfixExp[i])) {
-				if(charInfixExp[i] == '(') {
-					_infixArray.add("(");
-					continue;
-				}
-				if(charInfixExp[i] == ')') {
-						if(PNBuffer != ""){
-							if(PNBuffer.equals("+")) {
-								_infixArray.add(NumBuffer);
-								NumBuffer = "";
-								PNBuffer = "";
+				if(isParentheses("" + charInfixExp[i])) {
+					if(charInfixExp[i] == '(') {
+						_infixArray.add("(");
+						//fPCount++;
+						continue;
+					}
+					if(charInfixExp[i] == ')') {
+							if(PNBuffer != "") {
+								if(NumBuffer != "") {
+									if(PNBuffer.equals("+")) {
+										_infixArray.add(NumBuffer);
+										//numCount++;
+										NumBuffer = "";
+										PNBuffer = "";
+										_infixArray.add(")");
+										//sPCount++;
+										needPush = 1;
+										continue;
+									}
+									if(PNBuffer.equals("-")) {
+										_infixArray.add("-" + NumBuffer);
+										//numCount++;
+										NumBuffer = "";
+										PNBuffer = "";
+										_infixArray.add(")");
+										//sPCount++;
+										needPush = 1;
+										continue;
+									}
+								} else {
+									throw new Exception();
+								}
+							} else {
+								if(NumBuffer != "") {
+									_infixArray.add(NumBuffer);	
+									//numCount++;
+								}
 								_infixArray.add(")");
+								//sPCount++;
+								NumBuffer = "";
 								needPush = 1;
 								continue;
 							}
-							if(PNBuffer.equals("-")) {
-								_infixArray.add("-" + NumBuffer);
-								NumBuffer = "";
-								PNBuffer = "";
-								_infixArray.add(")");
-								needPush = 1;
-								continue;
-							}
-						} else {
-							if(NumBuffer != "") {
-								_infixArray.add(NumBuffer);	
-							}
-							_infixArray.add(")");
-							NumBuffer = "";
-							needPush = 1;
-							continue;
 						}
 					}
-				}
 			} else {
 				NumBuffer = NumBuffer + charInfixExp[i];
 			}
@@ -354,6 +270,10 @@ public class Calculator {
 			}
 		}
 	}
+	/**
+	 * Pop and print all elements of _infixStk. For testing only.  
+	 */
+	
 	public void printInfixArray() {
 		int stkLength = _infixArray.size();
 		System.out.println("This is the _infixArray");
