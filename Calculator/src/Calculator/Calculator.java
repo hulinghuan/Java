@@ -29,6 +29,7 @@ public class Calculator {
 			calculateStack.push(_reversePolishArray.get(i));
 			if(isOperator(calculateStack.get()) == true) {
 				operator = calculateStack.pop();
+				//need check if there are no less than 2 elements in stack in JavaScript
 				secondNum = calculateStack.pop();
 				firstNum = calculateStack.pop();
 				if(isOperator(firstNum) == true || isOperator(secondNum)) {
@@ -53,21 +54,28 @@ public class Calculator {
 					calculateStack.push(String.valueOf(result));
 				}
 			}
+		
 			operator = "";
 			secondNum = "";
 			firstNum = "";
 		}
+	//check if there are invalid parentheses
+	if(operator != "") {
+		throw new Exception();
+	}
 		return result;
 	}
 	/**
 	 * Convert the infix Stack to Reverse Polish Notation Stack
+	 * @throws Exception 
 	 */
-	public void infixToRPN() {
+	public void infixToRPN() throws Exception {
 		String pushBuffer = "";
 		Stack operatorStk = new Stack();
 		//String operatorBuffer = "";
 		int infixStkLength = _infixArray.size();
 		
+		_reversePolishArray.add("0");
 		for(int i = 0; i < infixStkLength; i++) {
 			pushBuffer = _infixArray.get(i);
 			if((!isOperator(pushBuffer) && !isParentheses(pushBuffer)) == true) {
@@ -91,7 +99,7 @@ public class Calculator {
 					}
 				}
 			}
-			if(isParentheses(pushBuffer) == true) {
+			if(isParentheses(pushBuffer) == true) {			
 				if(pushBuffer.equals("(")) {
 					operatorStk.push(pushBuffer);
 					pushBuffer = "";
@@ -107,15 +115,26 @@ public class Calculator {
 						}
 					pushBuffer = "";
 					}
+					/*while(true) {
+						pushBuffer = operatorStk.pop();
+						if(pushBuffer.equals("(")) {
+							break;
+						}
+						_reversePolishArray.add(pushBuffer);
+					}
+					pushBuffer = "";*/
 				}
 			}
 		}
+		
 		if(operatorStk.getStkSize() != 0) {
 			int operatorStkSize = operatorStk.getStkSize();
 			for(int i = 0; i < operatorStkSize; i++) {
 				_reversePolishArray.add(operatorStk.pop());
 			}
 		}
+		_reversePolishArray.add("+");
+		
 	}
 	/**
 	 * Print the _reversePolishArray. For testing only.
@@ -129,34 +148,80 @@ public class Calculator {
 	/**
 	 * Initial the Infix Stack by giving the ifix expression.
 	 * @param infixExp The math infix expression.
+	 * @throws Exception 
 	 */
-	public void initialInfixStk(String infixExp) {		
+	public void initialInfixArray(String infixExp) throws Exception {		
 		char[] charInfixExp = infixExp.toCharArray();
 		String pushNumberBuffer = "";
-		String pushOperationBuffer = "";
+		//String pushOperationBuffer = "";
+		ArrayList<String> pushOperationBuffer = new ArrayList<String>();
+		int needPushOperator = 0;
 		
 		for(int i = 0; i < infixExp.length(); i++) {
 			if(isSpace(charInfixExp[i]) == true) {
 				continue;
 			}
-			if(charInfixExp[i] == '+' || 
-				charInfixExp[i] == '-' ||
-				charInfixExp[i] == '*' ||
-				charInfixExp[i] == '/' ||
+			if(isOperator("" + charInfixExp[i]) ||
 				charInfixExp[i] == '(' ||
 				charInfixExp[i] == ')'
 										) {
 				if(pushNumberBuffer == "") {
-					pushOperationBuffer = pushOperationBuffer + charInfixExp[i];
-					_infixArray.add(pushOperationBuffer);
-					pushOperationBuffer = "";
+					if(needPushOperator == 1) {
+						_infixArray.add("" + charInfixExp[i]);
+						needPushOperator = 0;
+						continue;
+					}
+					if(charInfixExp[i] == '(') {
+						_infixArray.add("" + charInfixExp[i]);
+						continue;
+					}
+					if(charInfixExp[i] == ')') {
+						throw new Exception();
+					}
+					//pushOperationBuffer = pushOperationBuffer + charInfixExp[i];
+					pushOperationBuffer.add("" + charInfixExp[i]);
+					//pushOperationBuffer = "";
 				}
 				else {
-					pushOperationBuffer = pushOperationBuffer + charInfixExp[i];
-					_infixArray.add(pushNumberBuffer);
-					_infixArray.add(pushOperationBuffer);
-					pushOperationBuffer = "";
-					pushNumberBuffer = "";
+					if(pushOperationBuffer.size() == 1) {
+						if(pushOperationBuffer.equals("-")) {
+							pushOperationBuffer.clear();
+							pushOperationBuffer.add("" + charInfixExp[i]);
+							_infixArray.add("-" + pushNumberBuffer);
+							_infixArray.add(pushOperationBuffer.get(0));
+							pushOperationBuffer.clear();
+							pushNumberBuffer = "";
+							continue;
+						}
+						if(pushOperationBuffer.equals("+")) {
+							pushOperationBuffer.clear();
+							pushOperationBuffer.add("" + charInfixExp[i]);
+							_infixArray.add(pushNumberBuffer);
+							_infixArray.add(pushOperationBuffer.get(0));
+							pushOperationBuffer.clear();
+							pushNumberBuffer = "";
+							continue;
+						}
+					}
+					if(pushOperationBuffer.size() > 1) {
+						throw new Exception();
+					}
+					if(pushOperationBuffer.size() == 0) {
+						if(charInfixExp[i] == ')') {
+							needPushOperator = 1;
+							if(pushNumberBuffer != "") {
+								_infixArray.add(pushNumberBuffer);
+							}
+							pushNumberBuffer = "";
+							_infixArray.add(")");
+							continue;
+						}
+						pushOperationBuffer.add("" + charInfixExp[i]);
+						_infixArray.add(pushNumberBuffer);
+						_infixArray.add(pushOperationBuffer.get(0));
+						pushOperationBuffer.clear();
+						pushNumberBuffer = "";
+					}
 				}
 			} 
 			else {
@@ -164,13 +229,131 @@ public class Calculator {
 			}
 		}
 		if(pushNumberBuffer != "") {
-			_infixArray.add(pushNumberBuffer);
+			if(pushOperationBuffer.size() == 0) {
+				_infixArray.add(pushNumberBuffer);
+				return;
+			} else{
+				if(pushOperationBuffer.get(0).equals("+")) {
+					_infixArray.add(pushNumberBuffer);
+					return;
+				}
+				if(pushOperationBuffer.get(0).equals("-")) {
+					_infixArray.add("-" + pushNumberBuffer);
+					return;
+				}
+				throw new Exception();	
+			}
 		}
 		
 	}
 	/**
 	 * Pop and print all elements of _infixStk. For testing only.  
 	 */
+	public void initialInfixArray2(String infixExp) throws Exception {
+		char[] charInfixExp = infixExp.toCharArray();
+		String NumBuffer = "";
+		String PNBuffer = "";
+		int needPush = 0;
+		
+		for(int i = 0; i < charInfixExp.length; i++) {
+			if(isSpace(charInfixExp[i]) == true) {
+				continue;
+			}
+			if(isOperator("" + charInfixExp[i]) || isParentheses("" + charInfixExp[i])) {
+				if(isOperator("" + charInfixExp[i])) {
+					if(NumBuffer == "") {
+						if(needPush == 1) {
+							_infixArray.add("" + charInfixExp[i]);
+							needPush = 0;
+							continue;
+						} else {
+							PNBuffer = "" + charInfixExp[i];
+							needPush = 1;
+							continue;
+						}
+					} else {
+						if(PNBuffer != ""){
+							if(PNBuffer.equals("+")) {
+								_infixArray.add(NumBuffer);
+								NumBuffer = "";
+								PNBuffer = "";
+								_infixArray.add("" + charInfixExp[i]);
+								continue;
+							}
+							if(PNBuffer.equals("-")) {
+								_infixArray.add("-" + NumBuffer);
+								NumBuffer = "";
+								PNBuffer = "";
+								_infixArray.add("" + charInfixExp[i]);
+								continue;
+							}
+						} else {
+							_infixArray.add(NumBuffer);
+							_infixArray.add("" + charInfixExp[i]);
+							NumBuffer = "";
+							continue;
+						}
+					}
+				}
+			if(isParentheses("" + charInfixExp[i])) {
+				if(charInfixExp[i] == '(') {
+					_infixArray.add("(");
+					continue;
+				}
+				if(charInfixExp[i] == ')') {
+						if(PNBuffer != ""){
+							if(PNBuffer.equals("+")) {
+								_infixArray.add(NumBuffer);
+								NumBuffer = "";
+								PNBuffer = "";
+								_infixArray.add(")");
+								needPush = 1;
+								continue;
+							}
+							if(PNBuffer.equals("-")) {
+								_infixArray.add("-" + NumBuffer);
+								NumBuffer = "";
+								PNBuffer = "";
+								_infixArray.add(")");
+								needPush = 1;
+								continue;
+							}
+						} else {
+							if(NumBuffer != "") {
+								_infixArray.add(NumBuffer);	
+							}
+							_infixArray.add(")");
+							NumBuffer = "";
+							needPush = 1;
+							continue;
+						}
+					}
+				}
+			} else {
+				NumBuffer = NumBuffer + charInfixExp[i];
+			}
+		}
+		if(NumBuffer != "") {
+			if(PNBuffer != ""){
+				if(PNBuffer.equals("+")) {
+					_infixArray.add(NumBuffer);
+					NumBuffer = "";
+					PNBuffer = "";
+					return;
+				}
+				if(PNBuffer.equals("-")) {
+					_infixArray.add("-" + NumBuffer);
+					NumBuffer = "";
+					PNBuffer = "";
+					return;
+				}
+			} else {
+				_infixArray.add(NumBuffer);
+				NumBuffer = "";
+				return;
+			}
+		}
+	}
 	public void printInfixArray() {
 		int stkLength = _infixArray.size();
 		System.out.println("This is the _infixArray");

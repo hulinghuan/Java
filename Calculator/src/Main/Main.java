@@ -11,8 +11,24 @@ public class Main {
 	Scanner scn = new Scanner(System.in);
 	System.out.println("Please input the math expression");
 	inputString = scn.nextLine();
-	clt.initialInfixStk(inputString);
-	clt.infixToRPN();
+	/*try {
+		clt.initialInfixArray(inputString);
+	} catch (Exception e2) {
+		// TODO Auto-generated catch block
+		e2.printStackTrace();
+	}*/
+	try {
+		clt.initialInfixArray2(inputString);
+	} catch (Exception e2) {
+		// TODO Auto-generated catch block
+		e2.printStackTrace();
+	}
+	try {
+		clt.infixToRPN();
+	} catch (Exception e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
 	clt.printInfixArray();
 	clt.printRPA();
 	System.out.println("The calculate Result = ");
